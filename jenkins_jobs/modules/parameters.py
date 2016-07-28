@@ -763,9 +763,8 @@ def maven_metadata_param(parser, xml_parent, data):
 
 
 
-def active_choices_param_base(parser, xml_parent, data):
-    pdef = base_param(parser, xml_parent, data, False,
-                      'org.biouno.unochoice.ChoiceParameter')
+def active_choices_param_base(parser, xml_parent, data, paramType="org.biouno.unochoice.ChoiceParameter"):
+    pdef = base_param(parser, xml_parent, data, False, paramType)
     pdef.attrib['plugin'] = "uno-choice@1.4"
     XML.SubElement(pdef, "randomName").text = "choice-parameter-" + str(randint(10000000000000, 99999999999999))
     XML.SubElement(pdef, "visibleItemCount").text = "1"
@@ -845,7 +844,7 @@ def active_choices_reactive_param(parser, xml_parent, data):
             enable-filter: true
             referenced-parameters: OS_CHOICE
     """
-    pdef = active_choices_param_base(parser, xml_parent, data)
+    pdef = active_choices_param_base(parser, xml_parent, data, "org.biouno.unochoice.CascadeChoiceParameter")
     XML.SubElement(pdef, "referencedParameters").text = data['referenced-parameters']
 
 
