@@ -777,7 +777,7 @@ def active_choices_param_base(parser, xml_parent, data):
               'check'      : 'PT_CHECKBOX',
               'radio'      : 'PT_RADIO'}
     XML.SubElement(pdef, "choiceType").text = switch[data['choice-type']]
-    XML.SubElement(pdef, "filterable").text = data['enable-filter']
+    XML.SubElement(pdef, "filterable").text = str(data.get('enable-filter', False)).lower()
     return pdef
 
 
@@ -840,7 +840,7 @@ def active_choices_reactive_param(parser, xml_parent, data):
                 } else {
                     return ['Unkown State']
                 }
-            fallback-script: return ['error']
+            groovy-fallback-script: return ['error']
             choice-type: multi-box
             enable-filter: true
             referenced-parameters: OS_CHOICE
