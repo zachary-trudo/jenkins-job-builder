@@ -763,13 +763,30 @@ def maven_metadata_param(parser, xml_parent, data):
 
 
 
+def active_choices_param_base(parser, xml_parent, data):
+    pdef = base_param(parser, xml_parent, data, False,
+                      'org.biouno.unochoice.ChoiceParameter')
+    pdef.attrib['plugin'] = "uno-choice@1.4"
+    XML.SubElement(pdef, "randomName").text = "choice-parameter-" + randint(10000000000000, 99999999999999)
+    XML.SubElement(pdef, "visibleItemCount").text = "1"
+    scriptClass = XML.SubElement(pdef, "script", attrib={"class" : "org.biouno.unochoice.model.GroovyScript"})
+    XML.SubElement(scriptClass, "script").text = data['groovy-script']
+    XML.SubElement(scriptClass, "fallbackScript").text = data['groovy-fallback-script']
+    switch = {'single-box' : 'PT_SINGLE_SELECT',
+              'multi-box'  : 'PT_MULTI_SELECT',
+              'check'      : 'PT_CHECKBOX',
+              'radio'      : 'PT_RADIO'}
+    XML.SubElement(pdef, "choiceType").text = switch[data['choice-type']]
+    XML.SubElement(pdef, "filterable").text = data['enable-filter']
+    return pdef
+
 
 
 def active_choices_param(parser, xml_parent, data):
     """yaml: active-choices
     Active Choice Parameter
     Requires the jenkins :jenkins-wiki:`Jenkins Active Choices Parameter Plug-in
-    <Active+Choices+Plug-in>`.
+    <Active+Choices+Plugin>`.
 
     :arg str name: the name of the parameter
     :arg str description: description of parameter (optional)
@@ -787,28 +804,49 @@ def active_choices_param(parser, xml_parent, data):
               groovy-script: |
                 return ['centOS',
                         'coreOS',
-                        'ubuntu'
+                        'arch'
                        ]
               groovy-fallback-script: return['error']
               choice-type: single-box
               enable-filter: true
     """
-    pdef = base_param(parser, xml_parent, data, False,
-                      'org.biouno.unochoice.ChoiceParameter')
-    pdef.attrib['plugin'] = "uno-choice@1.4"
-    XML.SubElement(pdef, "randomName").text = "choice-parameter-" + randint(10000000000000, 99999999999999)
-    XML.SubElement(pdef, "visibleItemCount").text = "1"
-    scriptClass = XML.SubElement(pdef, "script", attrib={"class" : "org.biouno.unochoice.model.GroovyScript"})
-    XML.SubElement(scriptClass, "script").text = data['groovy-script']
-    XML.SubElement(scriptClass, "fallbackScript").text = data['groovy-fallback-script']
-    switch = {'single-box' : 'PT_SINGLE_SELECT',
-              'multi-box'  : 'PT_MULTI_SELECT',
-              'check'      : 'PT_CHECKBOX',
-              'radio'      : 'PT_RADIO'}
-    XML.SubElement(pdef, "choiceType").text = switch[data['choice-type']]
-    XML.SubElement(pdef, "filterable").text = data['enable-filter'] 
+    active_choices_param_base(parser, xml_parent, data)
 
+def active_choices_reactive_param(parser, xml_parent, data):
+    """yaml: active-choices-reactive
+    Active Choices Reactice Parameter
+    Requires the jenkins :jenkins-wiki:`Jenbkins Actice Choices Parameter Plug-in
+    <Actice+Choices+Plugin>`.
 
+    :arg str name: the name of the parameter
+    :arg str description: description of parameter (optional)
+    :arg str groovy-script: groovy script that returns a java.util.List, Array or java.util.Map
+    :arg str groovy-fallback-script: groovy script that runs if groovy-script fails. Same requirements as groovy-script
+    :arg str choice-type: string of either 'single-box', 'multi-box', 'check', or 'radio'
+    :arg bool enable-filter: true turns filtering on, false keeps it off. 
+    :arg str referenced-parameters: a list of comma separated parameter Names
+
+    Example::
+        - actice-choices-reactive
+            name: PROGRAM_CHOICE
+            description: Allows a user to pick programs based on OS_CHOICE
+            groovy-script: |
+                if (OS_CHOICE.equals('centOS')) {
+                    return ['emacs', 'vi']
+                } else if (OS_CHOICE.equals('coreOS')) {
+                    return ['nano', 'ifconfig']
+                } else if (OS_CHOICE.equals('arch') {
+                    return ['less', 'cat']
+                } else {
+                    return ['Unkown State']
+                }
+            fallback-script: return ['error']
+            choice-type: multi-box
+            enable-filter: true
+            referenced-parameters: OS_CHOICE
+    """
+    pdef = actice_choices_param_base(parser, xml_parent, data)
+    XML.SubElement(pdef, "referencedParameters").text = data['referenced-parameters']
 
 
 class Parameters(jenkins_jobs.modules.base.Base):
