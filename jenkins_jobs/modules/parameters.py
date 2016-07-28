@@ -814,7 +814,7 @@ def active_choices_param(parser, xml_parent, data):
 
 def active_choices_reactive_param(parser, xml_parent, data):
     """yaml: active-choices-reactive
-    Active Choices Reactice Parameter
+    Active Choices Reactive Parameter
     Requires the jenkins :jenkins-wiki:`Jenbkins Actice Choices Parameter Plug-in
     <Actice+Choices+Plugin>`.
 
@@ -827,7 +827,7 @@ def active_choices_reactive_param(parser, xml_parent, data):
     :arg str referenced-parameters: a list of comma separated parameter Names
 
     Example::
-        - actice-choices-reactive
+        - active-choices-reactive
             name: PROGRAM_CHOICE
             description: Allows a user to pick programs based on OS_CHOICE
             groovy-script: |
@@ -845,7 +845,7 @@ def active_choices_reactive_param(parser, xml_parent, data):
             enable-filter: true
             referenced-parameters: OS_CHOICE
     """
-    pdef = actice_choices_param_base(parser, xml_parent, data)
+    pdef = active_choices_param_base(parser, xml_parent, data)
     XML.SubElement(pdef, "referencedParameters").text = data['referenced-parameters']
 
 
