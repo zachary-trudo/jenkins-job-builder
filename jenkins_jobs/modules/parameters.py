@@ -33,6 +33,7 @@ Example::
 """
 
 import xml.etree.ElementTree as XML
+from random import randint
 
 from jenkins_jobs.errors import JenkinsJobsException
 from jenkins_jobs.errors import MissingAttributeError
@@ -725,6 +726,7 @@ def maven_metadata_param(parser, xml_parent, data):
         display in the drop-down. Any non-number value as well as 0 or negative
         values will default to all. (default 10)
     :arg str sorting-order: ascending or descending
+
         (default descending)
 
     Example:
@@ -758,6 +760,55 @@ def maven_metadata_param(parser, xml_parent, data):
         'maximum-versions-to-display', 10))
     XML.SubElement(pdef, 'username').text = data.get('repository-username', '')
     XML.SubElement(pdef, 'password').text = data.get('repository-password', '')
+
+
+
+
+
+def active_choices_param(parser, xml_parent, data):
+    """yaml: active-choices
+    Active Choice Parameter
+    Requires the jenkins :jenkins-wiki:`Jenkins Active Choices Parameter Plug-in
+    <Active+Choices+Plug-in>`.
+
+    :arg str name: the name of the parameter
+    :arg str description: description of parameter (optional)
+    :arg str groovy-script: groovy script that returns a java.util.List, Array or java.util.Map
+    :arg str groovy-fallback-script: groovy script that runs if groovy-script fails. Same requirements as groovy-script
+    :arg str choice-type: string of either 'single-box', 'multi-box', 'check', or 'radio'
+    :arg bool enable-filter: true turns filtering on, false keeps it off. 
+    
+    Example::
+
+        parameters:
+          - active-choices:
+              name: OS_CHOICE
+              description: Allows the user to pick an OS
+              groovy-script: |
+                return ['centOS',
+                        'coreOS',
+                        'ubuntu'
+                       ]
+              groovy-fallback-script: return['error']
+              choice-type: single-box
+              enable-filter: true
+    """
+    pdef = base_param(parser, xml_parent, data, False,
+                      'org.biouno.unochoice.ChoiceParameter')
+    pdef.attrib['plugin'] = "uno-choice@1.4"
+    XML.SubElement(pdef, "randomName").text = "choice-parameter-" + randint(10000000000000, 99999999999999)
+    XML.SubElement(pdef, "visibleItemCount").text = "1"
+    scriptClass = XML.SubElement(pdef, "script", attrib={"class" : "org.biouno.unochoice.model.GroovyScript"})
+    XML.SubElement(scriptClass, "script").text = data['groovy-script']
+    XML.SubElement(scriptClass, "fallbackScript").text = data['groovy-fallback-script']
+    switch = {'single-box' : 'PT_SINGLE_SELECT',
+              'multi-box'  : 'PT_MULTI_SELECT',
+              'check'      : 'PT_CHECKBOX',
+              'radio'      : 'PT_RADIO'}
+    XML.SubElement(pdef, "choiceType").text = switch[data['choice-type']]
+    XML.SubElement(pdef, "filterable").text = data['enable-filter'] 
+
+
 
 
 class Parameters(jenkins_jobs.modules.base.Base):
