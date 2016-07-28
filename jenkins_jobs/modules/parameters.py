@@ -767,7 +767,7 @@ def active_choices_param_base(parser, xml_parent, data):
     pdef = base_param(parser, xml_parent, data, False,
                       'org.biouno.unochoice.ChoiceParameter')
     pdef.attrib['plugin'] = "uno-choice@1.4"
-    XML.SubElement(pdef, "randomName").text = "choice-parameter-" + randint(10000000000000, 99999999999999)
+    XML.SubElement(pdef, "randomName").text = "choice-parameter-" + str(randint(10000000000000, 99999999999999))
     XML.SubElement(pdef, "visibleItemCount").text = "1"
     scriptClass = XML.SubElement(pdef, "script", attrib={"class" : "org.biouno.unochoice.model.GroovyScript"})
     XML.SubElement(scriptClass, "script").text = data['groovy-script']
