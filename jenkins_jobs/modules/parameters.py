@@ -426,14 +426,12 @@ def extended_choice_json_param(parser, xml_parent, data):
                       'com.cwctravel.hudson.plugins.'\
                       'extended__choice__parameter.'\
                       'ExtendedChoiceParameterDefinition')
-    XML.SubElement(pdef, 'name').text = data['name']
-    XML.SubElement(pdef, 'description').text = data.get('description', '')
     XML.SubElement(pdef, 'quoteValue').text = data.get('quote-value', '')
     XML.SubElement(pdef, 'saveJSONParameterToFile').text = str(data.get('save-json-value', ''))
     XML.SubElement(pdef, 'visibleItemCount').text = str(data.get('visible-item', 5))
     jsonData = data.get('json-string', '')
     groovyScript = groovyTemplate.format(jsonData)
-    XML.SubElement(pdef, 'groovyScript').text = groovyTemplate.format(JSON-DATA=data.get('json-string', ''))
+    XML.SubElement(pdef, 'groovyScript').text = groovyScript
     XML.SubElement(pdef, 'type').text = 'PT_JSON'
 
 
