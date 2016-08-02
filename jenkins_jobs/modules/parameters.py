@@ -423,15 +423,15 @@ def extended_choice_json_param(parser, xml_parent, data):
                       '/);\n'\
 
     pdef = base_param(parser, xml_parent, data, False, 
-                      'com.cwctravel.hudson.plugins.'
-                      'extended__choice__parameter.'
-                      'ExtendedChoiceParameterDefinition'
+                      'com.cwctravel.hudson.plugins.'\
+                      'extended__choice__parameter.'\
+                      'ExtendedChoiceParameterDefinition')
     XML.SubElement(pdef, 'name').text = data['name']
     XML.SubElement(pdef, 'description').text = data.get('description', '')
     XML.SubElement(pdef, 'quoteValue').text = data.get('quote-value', '')
     XML.SubElement(pdef, 'saveJSONParameterToFile').text = str(data.get('save-json-value', ''))
     XML.SubElement(pdef, 'visibleItemCount').text = str(data.get('visible-item', 5))
-    XML.SubElement(pdef, 'json-string').text = groovyTemplate.format(JSON-DATA=data['json-string'])
+    XML.SubElement(pdef, 'groovyScript').text = groovyTemplate.format(JSON-DATA=data['json-string'])
 
 
 def validating_string_param(parser, xml_parent, data):
