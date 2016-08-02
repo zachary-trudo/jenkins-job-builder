@@ -408,19 +408,19 @@ def extended_choice_json_param(parser, xml_parent, data):
         (optional, default 5)
     :arg str json-string: string containing the json-information
     """
-    groovyTemplate = 'import org.boon.Boon;'
-                     'def jsonEditorOptions = Boon.fromJson(/{'
-                            'disable_edit_json: true,'
-                            'disable_properties: true,'
-                            'no_additional_properties: true,'
-                            'disable_collapse: true,'
-                            'disable_array_add: true,'
-                            'disable_array_delete: true,'
-                            'disable_array_reorder: true,'
-                            'theme: "bootstrap2",'
-                            'iconlib:"fontawesome4",'
-                            'schema: {{{JSON-DATA}}}'
-                      '/);'
+    groovyTemplate = 'import org.boon.Boon;\n'\
+                     'def jsonEditorOptions = Boon.fromJson(/{\n'\
+                            'disable_edit_json: true,\n'\
+                            'disable_properties: true,\n'\
+                            'no_additional_properties: true,\n'\
+                            'disable_collapse: true,\n'\
+                            'disable_array_add: true,\n'\
+                            'disable_array_delete: true,\n'\
+                            'disable_array_reorder: true,\n'\
+                            'theme: "bootstrap2",\n'\
+                            'iconlib:"fontawesome4",\n'\
+                            'schema: {{{JSON-DATA}}}\n'\
+                      '/);\n'\
 
     pdef = base_param(parser, xml_parent, data, False, 
                       'com.cwctravel.hudson.plugins.'
