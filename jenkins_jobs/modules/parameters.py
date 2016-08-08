@@ -406,21 +406,8 @@ def extended_choice_json_param(parser, xml_parent, data):
         (optional, default false)
     :arg int visible-item: number of items that should be visible at one time
         (optional, default 5)
-    :arg str json-string: string containing the json-information
+    :arg str groovy-script: string containing the json-information
     """
-    groovyTemplate = 'import org.boon.Boon;\n'\
-                     'def jsonEditorOptions = Boon.fromJson(/{{\n'\
-                            'disable_edit_json: true,\n'\
-                            'disable_properties: true,\n'\
-                            'no_additional_properties: true,\n'\
-                            'disable_collapse: true,\n'\
-                            'disable_array_add: true,\n'\
-                            'disable_array_delete: true,\n'\
-                            'disable_array_reorder: true,\n'\
-                            'theme: "bootstrap2",\n'\
-                            'iconlib:"fontawesome4",\n'\
-                            'schema: {{{}}}\n'\
-                      '}}/);\n'
 
     pdef = base_param(parser, xml_parent, data, False, 
                       'com.cwctravel.hudson.plugins.'\
@@ -429,9 +416,7 @@ def extended_choice_json_param(parser, xml_parent, data):
     XML.SubElement(pdef, 'quoteValue').text = data.get('quote-value', '')
     XML.SubElement(pdef, 'saveJSONParameterToFile').text = str(data.get('save-json-value', ''))
     XML.SubElement(pdef, 'visibleItemCount').text = str(data.get('visible-item', 5))
-    jsonData = data.get('json-string', '')
-    groovyScript = groovyTemplate.format(jsonData)
-    XML.SubElement(pdef, 'groovyScript').text = groovyScript
+    XML.SubElement(pdef, 'groovyScript').text = data.get('groovy-script', '')
     XML.SubElement(pdef, 'type').text = 'PT_JSON'
 
 
